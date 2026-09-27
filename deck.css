@@ -333,6 +333,7 @@ body.idle{cursor:none}
 /* Centred statement slides with a click build (slide 3). */
 .slide.layout-center{align-items:center;text-align:center}
 .slide.layout-center .lines p,.slide.layout-center .sub{margin-left:auto;margin-right:auto}
+.slide.layout-center .swap{align-items:center}
 .slide.layout-center .lines.s-xl p{font-size:clamp(56px,9vw,150px)}
 .slide.active [data-anim][data-step]{opacity:0;transform:translateY(18px) scale(.985)}
 .slide.active [data-anim][data-step].on{opacity:1;transform:none}
