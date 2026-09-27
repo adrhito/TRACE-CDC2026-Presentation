@@ -216,6 +216,25 @@
       return n;
     },
 
+    // Method table: each finding, how it was tested, and what came out.
+    methods: function (b) {
+      var n = el('div', 'methods');
+      var head = el('div', 'mr mh');
+      (b.head || ['Finding', 'How we tested it', 'Result']).forEach(function (h) { head.appendChild(el('div', null, tok(h))); });
+      n.appendChild(head);
+      (b.items || []).forEach(function (it) {
+        var r = el('div', 'mr');
+        r.appendChild(el('div', 'mc', tok(it.claim)));
+        r.appendChild(el('div', 'mx', tok(it.how)));
+        var res = el('div', 'mv');
+        res.appendChild(el('div', 'mvv' + (it.tone ? ' ' + it.tone : ''), tok(it.result)));
+        if (it.detail) res.appendChild(el('div', 'mvd', tok(it.detail)));
+        r.appendChild(res);
+        n.appendChild(r);
+      });
+      return n;
+    },
+
     // Big-number comparisons: the ratio is the headline, the bars show where it comes from.
     ratios: function (b) {
       var n = el('div', 'ratios');

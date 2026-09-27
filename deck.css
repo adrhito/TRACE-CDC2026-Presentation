@@ -417,6 +417,17 @@ body.idle{cursor:none}
 .ratio .rl{font-size:clamp(16px,1.7vw,27px);font-weight:300;margin:clamp(8px,1vw,16px) 0 clamp(16px,1.8vw,28px);color:var(--void-fg);max-width:26ch}
 .ratio .rn{font-family:var(--mono);font-size:10.5px;color:var(--vz-txt);margin-top:12px;letter-spacing:.04em}
 
+/* method table: finding · how it was tested · result */
+.methods{display:flex;flex-direction:column;margin-top:clamp(8px,1vw,16px)}
+.methods .mr{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,2fr) minmax(0,1fr);gap:clamp(14px,2vw,36px);
+  padding:clamp(9px,1vw,15px) 0;border-top:1px solid var(--line);align-items:start}
+.methods .mh{border-top:none;padding-top:0;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint)}
+.methods .mc{font-size:clamp(13px,1.3vw,19px);color:var(--ink);font-weight:400;letter-spacing:-.01em;line-height:1.3}
+.methods .mx{font-size:clamp(11px,.98vw,14.5px);line-height:1.55;color:var(--ink-soft);font-weight:300}
+.methods .mvv{font-family:var(--mono);font-size:clamp(15px,1.6vw,25px);color:var(--accent);letter-spacing:-.02em;line-height:1.15}
+.methods .mvv.dim{color:var(--ink-mid)}
+.methods .mvd{font-family:var(--mono);font-size:10px;color:var(--ink-faint);margin-top:5px;letter-spacing:.03em;line-height:1.5}
+
 /* ─── chrome ────────────────────────────────────────────────────────────── */
 #chrome{position:fixed;inset:auto 0 0 0;z-index:30;pointer-events:none}
 #progress{height:1px;background:rgba(255,255,255,.08)}
@@ -479,6 +490,7 @@ body.idle{cursor:none}
   .list.c3,.list.c4,.list.c5,.statgrid,.shotgrid,.road,.pipe{grid-template-columns:repeat(2,1fr)}
   .cmp{grid-template-columns:1fr;gap:8px}
   .ratios,.slide.layout-split{grid-template-columns:1fr}
+  .methods .mr{grid-template-columns:1fr;gap:4px}
   .slide.layout-split>.photo-side{grid-column:1;grid-row:auto}
   .photo-side img{max-height:34vh}
   .photo-band{width:100%;grid-template-columns:minmax(150px,.9fr) minmax(0,1.1fr)}
