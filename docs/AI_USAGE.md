@@ -12,3 +12,4 @@
 - 2026-09-27 — Claude Code (Anthropic), at the maintainer's direction: added a social-good slide after the targeting slide (healthcare, prevention, public safety framed around naloxone and treatment, governments and funders); runtime now 4:49 across 24 slides.
 - 2026-09-27 — Claude Code (Anthropic), at the maintainer's direction: centred the 'Where does the harm land next?' slide.
 - 2026-09-27 — Claude Code (Anthropic), at the maintainer's direction: added a methods slide before the backtest (each finding, how it was tested, and the result, from backend/README.md); runtime now 5:07 across 25 slides.
+- 2026-09-27 — Claude Code (Anthropic), at the maintainer's direction: deleted the 'World Bank data is load-bearing' slide; runtime now 4:51 across 24 slides.
