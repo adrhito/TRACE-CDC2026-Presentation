@@ -215,17 +215,6 @@
       return n;
     },
 
-    // static matplotlib chart rendered from repo results (charts/make_charts.py)
-    chart: function (b) {
-      var n = el('figure', 'chart' + (b.size ? ' chart-' + b.size : ''));
-      var img = document.createElement('img');
-      img.src = b.src;
-      img.alt = tok(b.alt || b.caption || '');
-      n.appendChild(img);
-      if (b.caption) n.appendChild(el('figcaption', null, tok(b.caption)));
-      return n;
-    },
-
     // scannable link to the live site: light panel so phones read it on the dark slides
     qr: function (b) {
       var n = el('figure', 'qr');
