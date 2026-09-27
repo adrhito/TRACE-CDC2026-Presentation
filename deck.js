@@ -105,6 +105,7 @@
         var v = el('div', 'v', tok(it.value));
         v.setAttribute('data-count', tok(it.value));
         d.appendChild(v);
+        if (it.viz) d.appendChild(viz(it.viz));
         d.appendChild(el('div', 'l', tok(it.label)));
         if (it.source) d.appendChild(el('div', 's', tok(it.source)));
         n.appendChild(d);
@@ -206,6 +207,28 @@
       img.alt = tok(b.alt || b.caption || '');
       n.appendChild(img);
       if (b.caption) n.appendChild(el('figcaption', null, tok(b.caption)));
+      return n;
+    },
+
+    viz: function (b) {
+      var n = viz(b.viz || {});
+      if (b.caption) n.appendChild(el('div', 'vz-cap', tok(b.caption)));
+      return n;
+    },
+
+    // Big-number comparisons: the ratio is the headline, the bars show where it comes from.
+    ratios: function (b) {
+      var n = el('div', 'ratios');
+      (b.items || []).forEach(function (it) {
+        var d = el('div', 'ratio');
+        var v = el('div', 'rv', tok(it.value));
+        v.setAttribute('data-count', tok(it.value));
+        d.appendChild(v);
+        d.appendChild(el('div', 'rl', tok(it.label)));
+        if (it.viz) d.appendChild(viz(it.viz));
+        if (it.note) d.appendChild(el('div', 'rn', tok(it.note)));
+        n.appendChild(d);
+      });
       return n;
     },
 
@@ -439,26 +462,150 @@
     return svg;
   }
 
+  // ── figure graphics: small, exact pictures of the numbers on a slide ──────
+  function pct(v, max) { return Math.max(0, Math.min(100, (v / (max || 1)) * 100)); }
+
+  function viz(v) {
+    var n = el('div', 'vz vz-' + (v.kind || 'bars') + (v.size ? ' vz-' + v.size : ''));
+    var kind = v.kind || 'bars';
+
+    if (kind === 'fraction') {
+      // v.parts segments, v.filled of them lit
+      var row = el('div', 'fr');
+      for (var k = 0; k < (v.parts || 5); k++) {
+        var seg = el('i', k < (v.filled || 0) ? 'on' : null);
+        seg.style.setProperty('--d', (380 + k * 140) + 'ms');
+        row.appendChild(seg);
+      }
+      n.appendChild(row);
+      if (v.label) n.appendChild(el('div', 'vz-lbl', tok(v.label)));
+
+    } else if (kind === 'bars') {
+      // v.items: [{label, value, text, tone:'on'|'off'}]; bars share one scale
+      var items = v.items || [];
+      var max = v.max || Math.max.apply(null, items.map(function (it) { return it.value; }));
+      items.forEach(function (it, k) {
+        var r = el('div', 'br ' + (it.tone || (k === 0 ? 'on' : 'off')));
+        r.appendChild(el('div', 'bl', tok(it.label || '')));
+        var track = el('div', 'bt');
+        var fill = el('i');
+        fill.style.setProperty('--w', pct(it.value, max) + '%');
+        fill.style.setProperty('--d', (320 + k * 240) + 'ms');
+        track.appendChild(fill);
+        r.appendChild(track);
+        r.appendChild(el('div', 'bv', tok(it.text != null ? it.text : String(it.value))));
+        n.appendChild(r);
+      });
+
+    } else if (kind === 'meter') {
+      // one bar out of v.max, with optional reference marks [{at, label}]
+      var tr = el('div', 'mt');
+      var f = el('i');
+      f.style.setProperty('--w', pct(v.value, v.max) + '%');
+      tr.appendChild(f);
+      (v.marks || []).forEach(function (m) {
+        var t = el('b', null, '<span>' + tok(m.label) + '</span>');
+        t.style.left = pct(m.at, v.max) + '%';
+        tr.appendChild(t);
+      });
+      n.appendChild(tr);
+      if (v.label) n.appendChild(el('div', 'vz-lbl', tok(v.label)));
+
+    } else if (kind === 'dots') {
+      // one dot per v.per units; the count is the picture
+      var field = el('div', 'dt');
+      var count = Math.round((v.count || 0) / (v.per || 1));
+      for (var q = 0; q < count; q++) {
+        var dot = el('i');
+        dot.style.setProperty('--d', (300 + Math.round((q / Math.max(1, count)) * 700)) + 'ms');
+        field.appendChild(dot);
+      }
+      n.appendChild(field);
+      if (v.label) n.appendChild(el('div', 'vz-lbl', tok(v.label)));
+
+    } else if (kind === 'span') {
+      // coverage on a shared year axis: filled from→to, ticks for single editions
+      var sp = el('div', 'sp');
+      var lo = v.min || 1960, hi = v.max || 2025;
+      if (v.from != null) {
+        var fill2 = el('i');
+        fill2.style.left = pct(v.from - lo, hi - lo) + '%';
+        fill2.style.setProperty('--w', pct(v.to - v.from, hi - lo) + '%');
+        sp.appendChild(fill2);
+      }
+      (v.ticks || []).forEach(function (y) {
+        var t2 = el('b');
+        t2.style.left = pct(y - lo, hi - lo) + '%';
+        sp.appendChild(t2);
+      });
+      n.appendChild(sp);
+      var ax = el('div', 'sp-ax');
+      ax.appendChild(el('span', null, String(lo)));
+      ax.appendChild(el('span', 'mid', tok(v.label || '')));
+      ax.appendChild(el('span', null, String(hi)));
+      n.appendChild(ax);
+
+    } else if (kind === 'ci') {
+      // point estimate with its interval, against zero
+      var ns = 'http://www.w3.org/2000/svg';
+      var W = 400, H = 58, pl = 8, pr = 8;
+      var a = v.min, z = v.max;
+      var X = function (x) { return pl + ((x - a) / (z - a)) * (W - pl - pr); };
+      var svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      svg.setAttribute('class', 'ci');
+      function s(tag, at, txt) {
+        var e = document.createElementNS(ns, tag);
+        for (var key in at) e.setAttribute(key, at[key]);
+        if (txt != null) e.textContent = txt;
+        svg.appendChild(e);
+        return e;
+      }
+      s('line', { x1: X(a), x2: X(z), y1: 24, y2: 24, 'class': 'axis' });
+      s('line', { x1: X(0), x2: X(0), y1: 6, y2: 40, 'class': 'zero' });
+      s('text', { x: X(0), y: 54, 'text-anchor': 'middle', 'class': 'zl' }, '0 · no effect');
+      s('line', { x1: X(v.lo), x2: X(v.hi), y1: 24, y2: 24, 'class': 'whisk' });
+      s('line', { x1: X(v.lo), x2: X(v.lo), y1: 17, y2: 31, 'class': 'whisk' });
+      s('line', { x1: X(v.hi), x2: X(v.hi), y1: 17, y2: 31, 'class': 'whisk' });
+      s('circle', { cx: X(v.est), cy: 24, r: 5, 'class': 'est' });
+      s('text', { x: X(v.lo), y: 11, 'text-anchor': 'middle' }, String(v.lo).replace('-', '−'));
+      s('text', { x: X(v.hi), y: 11, 'text-anchor': 'middle' }, String(v.hi));
+      n.appendChild(svg);
+      if (v.label) n.appendChild(el('div', 'vz-lbl', tok(v.label)));
+    }
+    return n;
+  }
+
   // ── render ────────────────────────────────────────────────────────────────
   function render() {
     SLIDES.forEach(function (sl, idx) {
       var s = el('section', 'slide');
       s.setAttribute('data-theme', sl.theme || 'terminal');
       s.setAttribute('data-idx', String(idx));
+      if (sl.layout) s.classList.add('layout-' + sl.layout);
       var order = 0;
       (sl.blocks || []).forEach(function (b) {
         var fn = BLOCK[b.type];
         if (!fn) return;
         var node = fn(b);
         node.setAttribute('data-anim', '');
-        node.style.transitionDelay = (order * 90) + 'ms';
-        order++;
+        if (b.step) {
+          // held back until the presenter clicks; stepDelay staggers blocks on the same click
+          node.setAttribute('data-step', String(b.step));
+          node.style.transitionDelay = (b.stepDelay || 0) + 'ms';
+        } else {
+          node.style.transitionDelay = (order * 90) + 'ms';
+          order++;
+        }
         s.appendChild(node);
       });
       stage.appendChild(s);
     });
     buildGrid();
-    go(0, true);
+    // #7 opens on slide 7; #7.1 opens it with its first click build shown
+    var h = (location.hash || '').replace('#', '').split('.');
+    go((parseInt(h[0], 10) || 1) - 1, true);
+    if (h[1]) { stepAt = Math.min(maxStep(i), parseInt(h[1], 10) || 0); paintSteps(); }
   }
 
   function countUp(node) {
@@ -481,10 +628,41 @@
     requestAnimationFrame(step);
   }
 
-  function go(n, initial) {
+  // ── click builds: blocks with "step": n appear on the nth click ──────────
+  var stepAt = 0;
+  function maxStep(idx) {
+    var m = 0;
+    (SLIDES[idx] && SLIDES[idx].blocks || []).forEach(function (b) { m = Math.max(m, b.step || 0); });
+    return m;
+  }
+  function paintSteps() {
+    var cur = stage.children[i];
+    if (!cur) return;
+    Array.prototype.forEach.call(cur.querySelectorAll('[data-step]'), function (node) {
+      var on = parseInt(node.getAttribute('data-step'), 10) <= stepAt;
+      if (on && !node.classList.contains('on')) {
+        Array.prototype.forEach.call(node.querySelectorAll('[data-count]'), countUp);
+        if (node.hasAttribute('data-count')) countUp(node);
+      }
+      node.classList.toggle('on', on);
+    });
+  }
+  function next() {
+    if (stepAt < maxStep(i)) { stepAt++; paintSteps(); return; }
+    go(i + 1);
+  }
+  function prev() {
+    if (stepAt > 0) { stepAt--; paintSteps(); return; }
+    if (i > 0) go(i - 1, false, true);
+  }
+
+  function go(n, initial, fromEnd) {
     n = Math.max(0, Math.min(SLIDES.length - 1, n));
     var prev = stage.children[i];
     i = n;
+    // stepping back into a slide shows it fully built
+    stepAt = fromEnd ? maxStep(i) : 0;
+    paintSteps();
     Array.prototype.forEach.call(stage.children, function (s, idx) {
       s.classList.toggle('active', idx === i);
       s.classList.toggle('past', idx < i);
@@ -493,11 +671,14 @@
     var cur = stage.children[i];
     if (cur) {
       setTimeout(function () {
-        Array.prototype.forEach.call(cur.querySelectorAll('[data-count]'), countUp);
+        Array.prototype.forEach.call(cur.querySelectorAll('[data-count]'), function (node) {
+          if (!node.closest('[data-step]:not(.on)')) countUp(node);
+        });
       }, 260);
     }
     paintChrome();
     paintNotes();
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (err) { /* file:// in some browsers */ }
     Array.prototype.forEach.call(document.querySelectorAll('#grid .g'), function (g, idx) {
       g.classList.toggle('cur', idx === i);
     });
@@ -592,8 +773,8 @@
   document.addEventListener('keydown', function (e) {
     var k = e.key;
     if (k === 'Escape') { gridOn = helpOn = false; document.getElementById('grid').classList.remove('on'); document.getElementById('help').classList.remove('on'); return; }
-    if (k === 'ArrowRight' || k === ' ' || k === 'PageDown' || k === 'ArrowDown') { e.preventDefault(); go(i + 1); }
-    else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'ArrowUp') { e.preventDefault(); go(i - 1); }
+    if (k === 'ArrowRight' || k === ' ' || k === 'PageDown' || k === 'ArrowDown') { e.preventDefault(); next(); }
+    else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'ArrowUp') { e.preventDefault(); prev(); }
     else if (k === 'Home') go(0);
     else if (k === 'End') go(SLIDES.length - 1);
     else if (k === 'n' || k === 'N') { notesOn = !notesOn; document.getElementById('notes').classList.toggle('on', notesOn); }
@@ -607,7 +788,7 @@
   });
 
   stage.addEventListener('click', function (e) {
-    go(i + (e.clientX < window.innerWidth * 0.25 ? -1 : 1));
+    if (e.clientX < window.innerWidth * 0.25) prev(); else next();
   });
 
   var idleT;

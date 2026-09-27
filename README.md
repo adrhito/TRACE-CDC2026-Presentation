@@ -5,11 +5,13 @@ The submitted TRACE pitch deck, published as a self-contained static presentatio
 
 ## View
 
-Open the GitHub Pages site for this repository, or open `index.html` directly. Google Fonts are optional; without a network connection the deck uses local fallback fonts.
+**Slides: [rattled.me/TRACE-CDC2026-Presentation](http://rattled.me/TRACE-CDC2026-Presentation/)**
+
+That is the GitHub Pages site for this repository. You can also open `index.html` directly. Add `#N` to the URL to open slide N (for example `#6`). Google Fonts are optional; without a network connection the deck uses local fallback fonts.
 
 ## Controls
 
-- `→`, `Space`, or click the right side: next slide
+- `→`, `Space`, or click the right side: next slide (or the next click build, such as "They moved." on slide 3)
 - `←` or click the left side: previous slide
 - `N`: speaker cues (presenter screen only)
 - `T`: rehearsal timer and pace bar
