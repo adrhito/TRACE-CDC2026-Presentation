@@ -1,0 +1,20 @@
+<!-- AI-assisted: written with ChatGPT (OpenAI). See docs/AI_USAGE.md. -->
+# TRACE · Carolina Data Challenge 2026
+
+The submitted TRACE pitch deck, published as a self-contained static presentation. It runs in a modern browser and does not need a server-side application or API.
+
+## View
+
+Open the GitHub Pages site for this repository, or open `index.html` directly. Google Fonts are optional; without a network connection the deck uses local fallback fonts.
+
+## Controls
+
+- `→`, `Space`, or click the right side: next slide
+- `←` or click the left side: previous slide
+- `N`: speaker cues (presenter screen only)
+- `T`: rehearsal timer and pace bar
+- `G`: slide overview
+- `F`: fullscreen
+- `Esc`: close an overlay
+
+The presentation contains 24 slides and runs 4:45. Its images, screenshots, slide data, and renderer are included in this repository. Photo captions and source links are on the relevant slides; contextual notes are available in speaker cues.
