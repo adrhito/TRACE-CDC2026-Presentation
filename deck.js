@@ -701,7 +701,8 @@
     var sp = SPEAKERS[sl.speaker] || {};
     document.getElementById('progress').firstElementChild.style.width =
       (((i + 1) / SLIDES.length) * 100) + '%';
-    document.getElementById('spk').textContent = (sp.name || '') + (sp.section ? ' · ' + sp.section : '');
+    // section only: speaker names stay in the presenter notes, not on the audience screen
+    document.getElementById('spk').textContent = sp.section || '';
     document.getElementById('pos').textContent = (i + 1) + ' / ' + SLIDES.length;
     var rt = document.getElementById('rt');
     if (!timer.on) {
