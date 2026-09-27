@@ -51,7 +51,11 @@
     wordmark: function (b) {
       var w = el('div', 'wordmark-wrap');
       if (!b.small) w.appendChild(arcs());
-      w.appendChild(el('div', 'wordmark' + (b.small ? ' small' : ''), tok(b.text)));
+      // the TRACE dot-T mark sits beside the word, as in the product
+      var lock = el('div', 'lockup' + (b.small ? ' small' : ''));
+      lock.appendChild(mark());
+      lock.appendChild(el('div', 'wordmark' + (b.small ? ' small' : ''), tok(b.text)));
+      w.appendChild(lock);
       return w;
     },
 
@@ -99,7 +103,8 @@
     },
 
     statgrid: function (b) {
-      var n = el('div', 'statgrid' + (b.compact ? ' compact' : ''));
+      var n = el('div', 'statgrid' + (b.compact ? ' compact' : '') + (b.title ? ' titled' : ''));
+      if (b.title) n.appendChild(el('div', 'sg-title', tok(b.title)));
       (b.items || []).forEach(function (it) {
         var d = el('div', 'stat');
         var v = el('div', 'v', tok(it.value));
@@ -139,7 +144,7 @@
     },
 
     compare: function (b) {
-      var n = el('div', 'compare');
+      var n = el('div', 'compare' + ((b.items || []).length > 2 ? ' dense' : ''));
       (b.items || []).forEach(function (it, k) {
         var d = el('div', 'cmp ' + (it.tone || 'up'));
         d.appendChild(el('div', 'cl', tok(it.label)));
@@ -207,6 +212,18 @@
       img.alt = tok(b.alt || b.caption || '');
       n.appendChild(img);
       if (b.caption) n.appendChild(el('figcaption', null, tok(b.caption)));
+      return n;
+    },
+
+    // scannable link to the live site: light panel so phones read it on the dark slides
+    qr: function (b) {
+      var n = el('figure', 'qr');
+      var img = document.createElement('img');
+      img.src = b.src;
+      img.alt = 'QR code: ' + tok(b.url || '');
+      n.appendChild(img);
+      if (b.caption) n.appendChild(el('figcaption', null, tok(b.caption)));
+      if (b.url) n.appendChild(el('div', 'qr-url', tok(b.url)));
       return n;
     },
 
@@ -378,6 +395,26 @@
   }
 
   // ── svg bits ──────────────────────────────────────────────────────────────
+  // TRACE mark, from frontend/public/figma/trace-mark.svg. Neutral dots take the slide's text colour.
+  function mark() {
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('class', 'mark');
+    svg.setAttribute('viewBox', '0 0 44 44');
+    svg.setAttribute('aria-hidden', 'true');
+    var dots = [[5, 5, 0], [13.4, 5, 0], [21.8, 5, 1], [30.2, 5, 0], [38.6, 5, 0],
+                [21.8, 13.4, 1], [21.8, 21.8, 1], [21.8, 30.2, 1], [21.8, 38.6, 1],
+                [30.2, 38.6, 0], [38.6, 38.6, 0]];
+    dots.forEach(function (d, k) {
+      var c = document.createElementNS(ns, 'circle');
+      c.setAttribute('cx', d[0]); c.setAttribute('cy', d[1]); c.setAttribute('r', 2.7);
+      c.setAttribute('fill', d[2] ? '#DF4B27' : 'currentColor');
+      c.style.setProperty('--d', (120 + k * 60) + 'ms');
+      svg.appendChild(c);
+    });
+    return svg;
+  }
+
   function arcs() {
     var ns = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(ns, 'svg');
@@ -531,11 +568,12 @@
       if (v.label) n.appendChild(el('div', 'vz-lbl', tok(v.label)));
 
     } else if (kind === 'dots') {
-      // one dot per v.per units; the count is the picture
+      // one dot per v.per units; the count is the picture. v.lit: only that many dots are lit
       var field = el('div', 'dt');
       var count = Math.round((v.count || 0) / (v.per || 1));
+      var lit = v.lit == null ? count : Math.round(v.lit / (v.per || 1));
       for (var q = 0; q < count; q++) {
-        var dot = el('i');
+        var dot = el('i', q < lit ? null : 'off');
         dot.style.setProperty('--d', (300 + Math.round((q / Math.max(1, count)) * 700)) + 'ms');
         field.appendChild(dot);
       }

@@ -19,4 +19,4 @@ That is the GitHub Pages site for this repository. You can also open `index.html
 - `F`: fullscreen
 - `Esc`: close an overlay
 
-The presentation contains 23 slides and runs 4:35. Its images, screenshots, slide data, and renderer are included in this repository. Photo captions and source links are on the relevant slides; contextual notes are available in speaker cues.
+The presentation contains 24 slides (a title slide with a QR code to the live site, then the 4:35 talk). Its images, screenshots, slide data, and renderer are included in this repository. Photo captions and source links are on the relevant slides; contextual notes are available in speaker cues.

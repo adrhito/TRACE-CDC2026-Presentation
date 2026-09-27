@@ -143,6 +143,15 @@ body.idle{cursor:none}
   text-indent:.34em;
 }
 .wordmark-wrap .lines,.wordmark-wrap+.lines{position:relative;z-index:1;margin-top:clamp(16px,2vw,34px)}
+/* TRACE mark + word lockup */
+.lockup{position:relative;z-index:1;display:flex;align-items:center;gap:.28em;font-size:clamp(56px,13vw,210px);color:#fff}
+.lockup.small{font-size:clamp(28px,4.4vw,64px);color:var(--void-fg)}
+.lockup .mark{width:.78em;height:.78em;flex:0 0 auto;overflow:visible}
+.lockup .mark circle{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.2);
+  transition:opacity 500ms var(--ease) var(--d,0ms),transform 500ms var(--ease) var(--d,0ms)}
+.slide.active .lockup .mark circle{opacity:1;transform:none}
+.lockup .wordmark{font-size:1em}
+.slide.layout-split .lockup{font-size:clamp(40px,7vw,116px)}
 .wordmark.small{font-size:clamp(28px,4.4vw,64px);color:var(--accent);letter-spacing:.42em}
 .arcs{position:absolute;inset:-46% -12% -30% -10%;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.4s var(--ease) .2s}
 .slide.active .arcs{opacity:.62}
@@ -330,6 +339,15 @@ body.idle{cursor:none}
 .photo-side figcaption{font-family:var(--mono);font-size:10px;letter-spacing:.11em;color:var(--void-dim);
   margin-top:10px;text-align:right}
 
+/* QR code to the live site */
+.qr{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px}
+.qr img{display:block;width:min(34vh,340px);height:auto;background:#FCFAF6;padding:10px;border-radius:4px}
+.qr figcaption{font-family:var(--mono);font-size:clamp(11px,1vw,14px);letter-spacing:.16em;text-transform:uppercase;color:var(--accent-soft)}
+.qr .qr-url{font-family:var(--mono);font-size:clamp(10px,.85vw,12.5px);letter-spacing:.06em;color:var(--void-dim)}
+.slide.layout-split>.qr{grid-column:2;grid-row:1/span 8;align-self:center;justify-self:center}
+.compare.dense{gap:clamp(8px,1.1vw,18px)}
+.compare.dense .cv{font-size:clamp(20px,2.4vw,40px)}
+
 /* Centred statement slides with a click build (slide 3). */
 .slide.layout-center{align-items:center;text-align:center}
 .slide.layout-center .lines p,.slide.layout-center .sub{margin-left:auto;margin-right:auto}
@@ -392,6 +410,12 @@ body.idle{cursor:none}
 .vz-dots .dt i{width:6px;height:6px;border-radius:50%;background:var(--vz-on);opacity:0;transform:scale(.3);
   transition:opacity 400ms var(--ease) var(--d,0ms),transform 400ms var(--ease) var(--d,0ms)}
 .slide.active .vz-dots .dt i{opacity:.92;transform:none}
+.vz-dots .dt i.off{background:var(--vz-off)}
+.slide.active .vz-dots .dt i.off{opacity:1}
+/* a titled row of stats: a small heading over each group */
+.statgrid.titled{margin-top:clamp(10px,1.4vw,22px)}
+.statgrid .sg-title{grid-column:1/-1;font-family:var(--mono);font-size:clamp(10px,.85vw,12.5px);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-mid);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:-4px}
 
 /* coverage span on a year axis */
 .vz-span .sp{height:6px;background:var(--vz-off);position:relative}
@@ -509,7 +533,7 @@ body.idle{cursor:none}
   .cmp{grid-template-columns:1fr;gap:8px}
   .ratios,.slide.layout-split{grid-template-columns:1fr}
   .methods .mr{grid-template-columns:1fr;gap:4px}
-  .slide.layout-split>.photo-side{grid-column:1;grid-row:auto}
+  .slide.layout-split>.photo-side,.slide.layout-split>.qr{grid-column:1;grid-row:auto}
   .photo-side img{max-height:34vh}
   .photo-band{width:100%;grid-template-columns:minmax(150px,.9fr) minmax(0,1.1fr)}
 }
