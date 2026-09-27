@@ -19,4 +19,4 @@ That is the GitHub Pages site for this repository. You can also open `index.html
 - `F`: fullscreen
 - `Esc`: close an overlay
 
-The presentation contains 24 slides (a title slide with a QR code to the live site, then the 4:35 talk). Its images, screenshots, slide data, and renderer are included in this repository. Photo captions and source links are on the relevant slides; contextual notes are available in speaker cues.
+The presentation runs 5:00 or less (about 4:30 of timed slides), split into three speakers: the Problem (slides 2–7), the Data (8–10) and the Technical Architecture (11–16: route forecast, Reflex trained on Colab, real-news grounding, ONNX export). Slide 17 onward is untimed **Q&A backup** for the fourth teammate. Charts are rendered with matplotlib from the TRACE results files; regenerate them with `python charts/make_charts.py`.
