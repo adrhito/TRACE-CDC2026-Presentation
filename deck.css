@@ -315,6 +315,9 @@ body.idle{cursor:none}
 .shotgrid .meta{padding:clamp(10px,1.1vw,16px);border-top:1px solid var(--line)}
 .shotgrid .t{font-family:var(--mono);font-size:clamp(10px,.95vw,13px);letter-spacing:.14em;color:var(--accent)}
 .shotgrid .x{font-family:var(--disp);font-size:clamp(10.5px,.92vw,13.5px);line-height:1.55;color:var(--ink-soft);margin-top:7px;font-weight:300}
+.shotgrid-eight{grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(7px,.8vw,14px);margin-top:clamp(7px,1vw,14px)}
+.shotgrid-eight .meta{padding:clamp(6px,.65vw,10px)}
+.shotgrid-eight .x{font-size:clamp(9px,.72vw,11px);line-height:1.4;margin-top:4px}
 
 /* ─── chrome ────────────────────────────────────────────────────────────── */
 #chrome{position:fixed;inset:auto 0 0 0;z-index:30;pointer-events:none}

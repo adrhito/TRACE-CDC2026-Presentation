@@ -210,8 +210,9 @@
     },
 
     shotgrid: function (b) {
-      var n = el('div', 'shotgrid');
-      (b.items || []).forEach(function (it) {
+      var items = b.items || [];
+      var n = el('div', 'shotgrid' + (items.length > 6 ? ' shotgrid-eight' : ''));
+      items.forEach(function (it) {
         var cell = el('div', 'cell');
         var thumb = el('div', 'thumb');
         var src = shotSrc(it.sid);
