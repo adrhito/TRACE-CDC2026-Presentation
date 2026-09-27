@@ -417,6 +417,24 @@ body.idle{cursor:none}
 .ratio .rl{font-size:clamp(16px,1.7vw,27px);font-weight:300;margin:clamp(8px,1vw,16px) 0 clamp(16px,1.8vw,28px);color:var(--void-fg);max-width:26ch}
 .ratio .rn{font-family:var(--mono);font-size:10.5px;color:var(--vz-txt);margin-top:12px;letter-spacing:.04em}
 
+/* parts of one whole: seizures are only one slice of corridor confidence */
+.vz-stack .stk{display:flex;height:clamp(22px,2.6vw,38px);gap:3px}
+.vz-stack .stk i{display:block;height:100%;flex:0 0 calc(var(--w) - 3px);transform:scaleX(0);transform-origin:left;
+  transition:transform 700ms var(--ease) var(--d,0ms)}
+.slide.active .vz-stack .stk i{transform:none}
+.vz-stack .stk-k{display:flex;gap:3px;margin-top:10px}
+.vz-stack .stk-k>div{flex:0 0 calc(var(--w,0) - 3px);padding-right:8px;border-left:2px solid currentColor;padding-left:8px}
+.vz-stack .stk-k b{display:block;font-weight:400;font-size:clamp(15px,1.5vw,24px);letter-spacing:-.02em}
+.vz-stack .stk-k span{display:block;font-size:clamp(9.5px,.8vw,12px);line-height:1.35;color:var(--vz-txt);margin-top:3px;letter-spacing:.02em}
+.vz-stack .t0{background:var(--ink-mid);color:var(--ink-mid)}
+.vz-stack .stk-k .t0{background:none}
+.vz-stack .t1{background:var(--accent);color:var(--accent)}
+.vz-stack .t2{background:var(--accent-soft);color:var(--accent-soft)}
+.vz-stack .t3{background:var(--violet);color:var(--violet)}
+.vz-stack .t4{background:var(--sage);color:var(--sage)}
+.vz-stack .t5{background:#B98A4E;color:#B98A4E}
+.vz-stack .stk-k>div{background:none}
+
 /* method table: finding · how it was tested · result */
 .methods{display:flex;flex-direction:column;margin-top:clamp(8px,1vw,16px)}
 .methods .mr{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,2fr) minmax(0,1fr);gap:clamp(14px,2vw,36px);

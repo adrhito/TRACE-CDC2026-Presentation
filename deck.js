@@ -564,6 +564,28 @@
       ax.appendChild(el('span', null, String(hi)));
       n.appendChild(ax);
 
+    } else if (kind === 'stack') {
+      // parts of one whole, e.g. the points behind a score; v.items: [{label, value, tone}]
+      var tot = 0;
+      (v.items || []).forEach(function (it) { tot += it.value; });
+      var bar = el('div', 'stk');
+      var keys = el('div', 'stk-k');
+      (v.items || []).forEach(function (it, k) {
+        var w = pct(it.value, v.total || tot) + '%';
+        var seg = el('i', 't' + (it.tone || k));
+        seg.style.setProperty('--w', w);
+        seg.style.setProperty('--d', (300 + k * 160) + 'ms');
+        bar.appendChild(seg);
+        var key = el('div', 't' + (it.tone || k));
+        key.style.setProperty('--w', w);
+        key.appendChild(el('b', null, String(it.value)));
+        key.appendChild(el('span', null, tok(it.label)));
+        keys.appendChild(key);
+      });
+      n.appendChild(bar);
+      n.appendChild(keys);
+      if (v.label) n.appendChild(el('div', 'vz-lbl', tok(v.label)));
+
     } else if (kind === 'ci') {
       // point estimate with its interval, against zero
       var ns = 'http://www.w3.org/2000/svg';
