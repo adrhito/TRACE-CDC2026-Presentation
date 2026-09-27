@@ -16,7 +16,7 @@
   // ── helpers ───────────────────────────────────────────────────────────────
   function tok(s) {
     if (typeof s !== 'string') return s;
-    return s.replace(/\{\{([a-z_.]+)\}\}/g, function (m, path) {
+    return s.replace(/\{\{([a-z0-9_.]+)\}\}/g, function (m, path) {
       var cur = D;
       var parts = path.split('.');
       for (var k = 0; k < parts.length; k++) {
